@@ -1,0 +1,103 @@
+:host {
+    display: block;
+}
+
+.pokemon-card {
+    position: relative;
+    background-color: #f1f5f9;
+    border: 2px solid transparent;
+    border-radius: 18px;
+    padding: 1.25rem 0.75rem 0.85rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    user-select: none;
+    min-height: 175px;
+    justify-content: space-between;
+
+    &:hover:not(.is-disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 64, 104, 0.1);
+        border-color: #cbd5e1;
+    }
+
+    &:focus-visible {
+        outline: 2px solid #004068;
+        outline-offset: 2px;
+    }
+
+    &.is-selected {
+        background-color: #fecb2e;
+        border-color: transparent;
+        box-shadow: 0 4px 16px rgba(254, 203, 46, 0.35);
+        transform: translateY(-2px);
+
+        .card-pill {
+            background-color: #004068;
+        }
+
+        &:hover:not(.is-disabled) {
+            border-color: transparent;
+            box-shadow: 0 8px 20px rgba(254, 203, 46, 0.45);
+        }
+    }
+
+    &.is-disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        filter: grayscale(0.5);
+    }
+}
+
+.card-image-container {
+    width: 110px;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.35rem;
+}
+
+.pokemon-sprite {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+
+    .pokemon-card:hover:not(.is-disabled) & {
+        transform: scale(1.08);
+    }
+}
+
+.card-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    background-color: #004068;
+    color: #ffffff;
+    border-radius: 9999px;
+    padding: 0.35rem 0.85rem;
+    max-width: 95%;
+    box-sizing: border-box;
+}
+
+.pokemon-id {
+    font-size: 0.775rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #ffffff;
+}
+
+.pokemon-name {
+    font-size: 0.825rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -1,0 +1,29 @@
+<div
+    class="pokemon-card"
+    [class.is-selected]="selected()"
+    [class.is-disabled]="disabled() && !selected()"
+    (click)="onCardClick()"
+    (keydown.enter)="onCardClick()"
+    (keydown.space)="$event.preventDefault(); onCardClick()"
+    tabindex="0"
+    role="checkbox"
+    [attr.aria-checked]="selected()"
+    [attr.aria-disabled]="disabled() && !selected()"
+    [attr.aria-label]="'Seleccionar a ' + item().name + ', número ' + formattedId()"
+    data-testid="pokemon-card"
+>
+    <!-- image pokemon -->
+    <div class="card-image-container">
+        <img
+            [src]="spriteUrl()"
+            [alt]="item().name"
+            class="pokemon-sprite"
+            loading="lazy"
+        />
+    </div>
+
+    <div class="card-pill">
+        <span class="pokemon-id">{{ formattedId() }}</span>
+        <span class="pokemon-name">{{ item().name }}</span>
+    </div>
+</div>
