@@ -1,1 +1,35 @@
-<h1>New User</h1>
+<main class="new-user-page">
+    <header class="page-header">
+        <div class="title-row">
+            <button type="button" class="back-btn" (click)="onBack()" aria-label="Volver">‹</button>
+            <h1 class="page-title">¡Hola! Configuremos tu perfil</h1>
+        </div>
+        <p class="page-subtitle">Queremos conocerte mejor.</p>
+    </header>
+
+    <div class="page-content">
+        <!-- Columna Izquierda: Tarjeta con foto de perfil -->
+        <div class="card-col">
+            <app-trainer-card
+                variant="upload"
+                [photoData]="photoData()"
+                [photoName]="photoName()"
+                [photoError]="photoError()"
+                (photoSelected)="onPhotoSelected($event)"
+                (photoRemoved)="onPhotoRemoved()"
+            />
+        </div>
+
+        <!-- Columna Derecha: Formulario de información -->
+        <div class="form-col">
+            <app-trainer-form
+                [initialAccount]="trainerData.profile()"
+                [hasPhoto]="hasPhoto()"
+                [photoError]="photoError()"
+                (formValidityChange)="onFormValidityChange($event)"
+                (photoRequired)="onPhotoRequired()"
+                (formSubmit)="onFormSubmit($event)"
+            />
+        </div>
+    </div>
+</main>

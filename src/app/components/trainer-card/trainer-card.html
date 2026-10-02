@@ -1,0 +1,121 @@
+<div class="trainer-card" [class]="'variant-' + variant()" data-testid="trainer-card">
+    <!-- VARIANTE UPLOAD (Paso 1: New User) -->
+    @if (variant() === 'upload') {
+        <h3 class="card-title">Imágen perfil</h3>
+
+        <div class="avatar-container">
+            <div class="avatar-circle">
+                @if (hasPhoto()) {
+                    <img [src]="photoData()" alt="Foto del entrenador" class="avatar-photo" />
+                } @else {
+                    <div class="avatar-placeholder">
+                        <img src="images/avatar.svg" alt="Avatar placeholder" class="placeholder-icon" />
+                    </div>
+                }
+            </div>
+        </div>
+
+        <input #fileInput type="file" accept="image/*" class="file-input" (change)="onFileChange($event)" data-testid="trainer-photo-input" />
+
+        <div
+            class="upload-box"
+            [class.upload-box-filled]="hasPhoto()"
+            [class.upload-box-error]="!hasPhoto() && !!photoError()"
+            (click)="triggerFileSelect()"
+            tabindex="0"
+            role="button"
+            [attr.aria-label]="hasPhoto() ? 'Archivo cargado: ' + photoName() : 'Adjunta un foto'"
+        >
+            @if (!hasPhoto()) {
+                <span class="upload-label">Adjunta un foto</span>
+                <img src="images/cloud_upload.svg" alt="Subir foto" class="upload-icon" />
+            } @else {
+                <span class="file-name" [title]="photoName()">{{ photoName() }}</span>
+                <button type="button" class="remove-btn" (click)="removePhoto($event)" aria-label="Eliminar foto" data-testid="remove-photo-btn">
+                    <img src="images/trash.svg" alt="Eliminar" class="trash-icon" />
+                </button>
+            }
+        </div>
+
+        @if (!hasPhoto() && photoError()) {
+            <span class="upload-error" role="alert" data-testid="photo-error">
+                {{ photoError() }}
+            </span>
+        }
+    }
+
+    <!-- VARIANTE SUMMARY (Paso 2: Selección de Pokémon) -->
+    @if (variant() === 'summary') {
+        <h2 class="trainer-name">{{ fullName() }}</h2>
+
+        <div class="avatar-container">
+            <div class="avatar-circle">
+                @if (hasPhoto()) {
+                    <img [src]="photoData()" alt="Foto del entrenador" class="avatar-photo" />
+                } @else {
+                    <div class="avatar-placeholder">
+                        <img src="images/avatar.svg" alt="Avatar placeholder" class="placeholder-icon" />
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="info-list">
+            <div class="info-row">
+                <span class="info-label">Pasatiempo</span>
+                <span class="info-value">{{ hobby() || '—' }}</span>
+            </div>
+            @if (age() !== null) {
+                <div class="info-row">
+                    <span class="info-label">Edad</span>
+                    <span class="info-value">{{ age() }} años</span>
+                </div>
+            }
+            @if (showDocument()) {
+                <div class="info-row">
+                    <span class="info-label">{{ document()?.label }}</span>
+                    <span class="info-value">{{ document()?.value }}</span>
+                </div>
+            }
+        </div>
+    }
+
+    <!-- VARIANTE PROFILE (Paso 3: Perfil Completo) -->
+    @if (variant() === 'profile') {
+        <div class="badge-header">
+            <span class="badge-label">Entrenador</span>
+            <img src="images/badge.svg" alt="Medalla Entrenador" class="badge-icon" />
+        </div>
+
+        <div class="avatar-container compact">
+            <div class="avatar-circle compact">
+                @if (hasPhoto()) {
+                    <img [src]="photoData()" alt="Foto del entrenador" class="avatar-photo" />
+                } @else {
+                    <div class="avatar-placeholder">
+                        <img src="images/avatar.svg" alt="Avatar placeholder" class="placeholder-icon" />
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="info-list">
+            <div class="info-row">
+                <span class="info-label">Pasatiempo</span>
+                <span class="info-value">{{ hobby() || '—' }}</span>
+            </div>
+            @if (age() !== null) {
+                <div class="info-row">
+                    <span class="info-label">Edad</span>
+                    <span class="info-value">{{ age() }} años</span>
+                </div>
+            }
+            @if (showDocument()) {
+                <div class="info-row">
+                    <span class="info-label">{{ document()?.label }}</span>
+                    <span class="info-value">{{ document()?.value }}</span>
+                </div>
+            }
+        </div>
+    }
+</div>

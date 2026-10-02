@@ -1,0 +1,91 @@
+<section class="trainer-form-container" aria-labelledby="form-title">
+    <header class="form-header">
+        <h2 id="form-title" class="form-title">Tu información</h2>
+        <p class="form-subtitle">Completa la siguiente información para completar tu perfil</p>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="trainer-form" novalidate>
+        <!-- Campo: Nombre -->
+        <div class="form-field">
+            <input
+                type="text"
+                id="full-name"
+                formControlName="fullName"
+                placeholder="Nombre*"
+                class="form-input"
+                [class.form-input-error]="!!formErrors('fullName')"
+                autocomplete="name"
+                aria-required="true"
+            />
+            @if (formErrors('fullName')) {
+                <span class="form-error" role="alert">
+                    {{ formErrors('fullName') }}
+                </span>
+            }
+        </div>
+
+        <!-- Campo: Pasatiempo favorito (Datalist Autocomplete) -->
+        <div class="form-field">
+            <input type="text" id="hobby" formControlName="hobby" placeholder="Pasatiempo favorito" list="hobbies-list" class="form-input" autocomplete="off" />
+            <datalist id="hobbies-list">
+                @for (hobby of hobbyOptions; track hobby) {
+                    <option [value]="hobby"></option>
+                }
+            </datalist>
+        </div>
+
+        <!-- Campo: Cumpleaños -->
+        <div class="form-field">
+            <div class="input-wrapper" [class.input-wrapper-error]="!!formErrors('birthdate')">
+                <input
+                    #dateInput
+                    type="date"
+                    id="birthdate"
+                    formControlName="birthdate"
+                    [max]="maxDate"
+                    placeholder="Cumpleaños*"
+                    class="form-input input-date"
+                    aria-required="true"
+                />
+                <button type="button" class="icon-btn" (click)="openDatePicker(dateInput)" tabindex="-1" aria-label="Abrir calendario">
+                    <img src="images/calendar_today.svg" alt="" class="field-icon" />
+                </button>
+            </div>
+            @if (formErrors('birthdate')) {
+                <span class="form-error" role="alert">
+                    {{ formErrors('birthdate') }}
+                </span>
+            }
+        </div>
+
+        <!-- Campo: Documento (DUI para adultos, carnet para menores) -->
+        <div class="form-field">
+            <input
+                type="text"
+                id="document"
+                formControlName="dni"
+                [placeholder]="documentPlaceholder()"
+                class="form-input"
+                [class.form-input-error]="!!formErrors('dni')"
+                (input)="onDniInput($event)"
+                [attr.aria-required]="isAdult()"
+                maxlength="10"
+            />
+            @if (formErrors('dni')) {
+                <span class="form-error" role="alert">
+                    {{ formErrors('dni') }}
+                </span>
+            }
+        </div>
+
+        <!-- Botón de acción: Continuar -->
+        <div class="form-actions">
+            <button type="submit" class="submit-btn" [disabled]="!canSubmit()" data-testid="continue-btn">Continuar</button>
+            @if (effectivePhotoError()) {
+                <span class="form-photo-error" role="alert" data-testid="form-photo-error">
+                    {{ effectivePhotoError() }}
+                </span>
+            }
+        </div>
+    </form>
+</section>

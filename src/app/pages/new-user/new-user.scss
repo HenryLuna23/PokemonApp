@@ -1,3 +1,112 @@
 :host {
-  display: block;
+    display: block;
+    min-height: calc(100vh - 72px);
+    background-color: #ffffff;
+}
+
+.new-user-page {
+    max-width: 1020px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+    box-sizing: border-box;
+
+    .page-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .title-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .back-btn {
+        background: none;
+        border: none;
+        color: #004068;
+        font-size: 2.25rem;
+        font-weight: 600;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0 0.25rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+            transform 0.15s ease,
+            opacity 0.15s ease;
+
+        &:hover {
+            opacity: 0.8;
+            transform: translateX(-2px);
+        }
+
+        &:focus-visible {
+            outline: 2px solid #004068;
+            border-radius: 4px;
+        }
+    }
+
+    .page-title {
+        font-size: 1.85rem;
+        font-weight: 700;
+        color: #004068;
+        margin: 0;
+        letter-spacing: -0.02em;
+    }
+
+    .page-subtitle {
+        font-size: 0.95rem;
+        color: #64748b;
+        margin: 0.35rem 0 0 2.25rem;
+    }
+
+    .page-content {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 4.5rem;
+    }
+
+    .card-col {
+        width: 100%;
+        max-width: 340px;
+        flex-shrink: 0;
+    }
+
+    .form-col {
+        width: 100%;
+        max-width: 440px;
+        flex-grow: 1;
+    }
+}
+
+/* Responsivo para tablets y móviles */
+@media (max-width: 840px) {
+    .new-user-page {
+        padding: 1.5rem 1rem 3rem;
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+        }
+
+        .page-subtitle {
+            margin-left: 1.75rem;
+        }
+
+        .page-content {
+            flex-direction: column;
+            align-items: center;
+            gap: 2.5rem;
+        }
+
+        .card-col,
+        .form-col {
+            max-width: 360px;
+        }
+    }
 }
