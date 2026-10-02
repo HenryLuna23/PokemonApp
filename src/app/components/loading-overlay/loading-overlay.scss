@@ -1,0 +1,31 @@
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  text-align: center;
+}
+
+.loading-gif {
+  width: 360px;
+  height: auto;
+  object-fit: contain;
+}
+
+.loading-text {
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: 500;
+  color: #185A7D;
+  margin: 0;
+}

@@ -1,0 +1,8 @@
+@if (loadingService.isLoading()) {
+  <div class="loading-overlay" role="status" aria-live="polite" data-testid="global-loading-overlay">
+    <div class="loading-content">
+      <img src="loading.gif" alt="Cargando" class="loading-gif" />
+      <p class="loading-text">{{ loadingService.message() }}</p>
+    </div>
+  </div>
+}
