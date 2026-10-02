@@ -25,8 +25,8 @@
     }
 
     .trainer-name {
-        font-size: 1.5rem;
-        font-weight: 700;
+        font-size: 1.75rem;
+        font-weight: 800;
         color: #004068;
         margin: 0 0 1.25rem 0;
         text-align: center;
@@ -214,6 +214,13 @@
         &:last-child {
             border-bottom: none;
             padding-bottom: 0;
+        }
+    }
+
+    &.variant-summary {
+        .info-row {
+            border-bottom: none;
+            padding-bottom: 0.25rem;
         }
     }
 
