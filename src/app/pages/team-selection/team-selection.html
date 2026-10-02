@@ -1,7 +1,17 @@
 <main class="team-selection-page">
-    <div class="page-content">
-        <!-- Columna Izquierda: Tarjeta del Entrenador (Variante Summary) -->
-        <aside class="card-col">
+    <div class="page-layout">
+        <!-- Columna Izquierda: Encabezado de retorno y Tarjeta del Entrenador -->
+        <aside class="left-col">
+            <header class="page-top-header">
+                <button type="button" class="back-btn" (click)="onBack()" aria-label="Volver al registro">
+                    ‹
+                </button>
+                <div class="header-titles">
+                    <h1 class="main-title">¡Ya casi términamos!</h1>
+                    <p class="main-subtitle">Revisa la información, y completa lo solicitado.</p>
+                </div>
+            </header>
+
             <app-trainer-card
                 variant="summary"
                 [photoData]="profile()?.photoData ?? null"
@@ -12,8 +22,82 @@
             />
         </aside>
 
-        <!-- Columna Derecha: aqui hay que agregar el catalogoo y selección de Pokémon -->
-        <section class="selection-col">
+        <!-- Columna Derecha: Catálogo con Virtual Scroll y Guardar -->
+        <section class="right-col">
+            <!-- Encabezado de la sección Pokémon -->
+            <div class="selection-header">
+                <h2 class="selection-title">Pokémon</h2>
+                <p class="selection-subtitle">Selecciona 3 Pokémon para que sean parte de tu equipo</p>
+            </div>
+
+            <!-- Buscador estilo píldora -->
+            <div class="search-bar">
+                <img src="images/search.svg" alt="" class="search-icon" />
+                <input
+                    type="text"
+                    [value]="searchQuery()"
+                    (input)="onSearchInput($event)"
+                    placeholder="Buscar por índice, nombre..."
+                    class="search-input"
+                    aria-label="Buscar por índice o nombre"
+                />
+                @if (searchQuery()) {
+                    <button type="button" class="clear-btn" (click)="clearSearch()" aria-label="Limpiar búsqueda">
+                        ✕
+                    </button>
+                }
+            </div>
+
+            <!-- Estados del catálogo -->
+            @if (pokemonData.isLoading()) {
+                <div class="state-message">
+                    <p>Cargando lista de Pokémon...</p>
+                </div>
+            } @else if (pokemonData.error()) {
+                <div class="state-message error-state">
+                    <p>{{ pokemonData.error() }}</p>
+                    <button type="button" class="retry-btn" (click)="pokemonData.loadInitialList()">Reintentar</button>
+                </div>
+            } @else if (filteredPokemon().length === 0) {
+                <div class="state-message empty-state">
+                    <p>No se encontraron Pokémon para "<strong>{{ searchQuery() }}</strong>"</p>
+                </div>
+            } @else {
+                <!-- Virtual Scroll Viewport de 3 columnas -->
+                <cdk-virtual-scroll-viewport
+                    [itemSize]="itemRowSize"
+                    (scrolledIndexChange)="onScrolledIndexChange($event)"
+                    class="pokemon-virtual-viewport"
+                    data-testid="pokemon-grid"
+                >
+                    <div *cdkVirtualFor="let row of pokemonRows(); trackBy: trackByRow" class="pokemon-row">
+                        @for (item of row; track item.id) {
+                            <app-pokemon-card
+                                [item]="item"
+                                [details]="pokemonData.getDetails(item.id)"
+                                [selected]="isSelected(item.id)"
+                                [disabled]="isMaxSelected() && !isSelected(item.id)"
+                                (toggle)="onTogglePokemon($event)"
+                            />
+                        }
+                    </div>
+                </cdk-virtual-scroll-viewport>
+
+                <!-- Botón Guardar centrado -->
+                <div class="save-action-container">
+                    <button
+                        type="button"
+                        class="save-btn"
+                        [disabled]="!canSave()"
+                        (click)="onSaveTeam()"
+                        data-testid="save-team-btn"
+                    >
+                        Guardar
+                    </button>
+                </div>
+            }
         </section>
     </div>
 </main>
+
+
