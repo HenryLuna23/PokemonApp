@@ -1,1 +1,19 @@
-<h1>Team Selection</h1>
+<main class="team-selection-page">
+    <div class="page-content">
+        <!-- Columna Izquierda: Tarjeta del Entrenador (Variante Summary) -->
+        <aside class="card-col">
+            <app-trainer-card
+                variant="summary"
+                [photoData]="profile()?.photoData ?? null"
+                [fullName]="profile()?.fullName ?? ''"
+                [hobby]="profile()?.hobby ?? ''"
+                [age]="trainerAge()"
+                [document]="trainerDocument()"
+            />
+        </aside>
+
+        <!-- Columna Derecha: aqui hay que agregar el catalogoo y selección de Pokémon -->
+        <section class="selection-col">
+        </section>
+    </div>
+</main>

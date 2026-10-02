@@ -1,3 +1,46 @@
 :host {
-  display: block;
+    display: block;
+    min-height: calc(100vh - 72px);
+    background-color: #ffffff;
+}
+
+.team-selection-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+    box-sizing: border-box;
+
+    .page-content {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 3.5rem;
+    }
+
+    .card-col {
+        width: 100%;
+        max-width: 340px;
+        flex-shrink: 0;
+    }
+
+    .selection-col {
+        flex-grow: 1;
+        min-width: 0;
+    }
+}
+
+@media (max-width: 840px) {
+    .team-selection-page {
+        padding: 1.5rem 1rem 3rem;
+
+        .page-content {
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .card-col {
+            max-width: 360px;
+        }
+    }
 }
