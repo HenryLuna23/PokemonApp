@@ -1,3 +1,4 @@
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
@@ -70,6 +71,11 @@ describe('TeamSelection', () => {
             } as any),
         );
 
+        const mockBreakpointObserver = jasmine.createSpyObj<BreakpointObserver>('BreakpointObserver', ['observe']);
+        mockBreakpointObserver.observe.and.returnValue(
+            of({ matches: false, breakpoints: {} } as BreakpointState),
+        );
+
         await TestBed.configureTestingModule({
             imports: [TeamSelection],
             providers: [
@@ -79,6 +85,7 @@ describe('TeamSelection', () => {
                 { provide: TrainerStorage, useClass: MockTrainerStorage },
                 { provide: PokemonApi, useValue: pokemonApiSpy },
                 { provide: Router, useValue: routerSpy },
+                { provide: BreakpointObserver, useValue: mockBreakpointObserver },
             ],
         }).compileComponents();
 
@@ -94,14 +101,14 @@ describe('TeamSelection', () => {
         expect(cardEl.textContent).toContain('Ash Ketchum');
     });
 
-    it('should render pokemon virtual scroll viewport and group in rows of 3', () => {
+    it('should render pokemon virtual scroll viewport and group in rows', () => {
         const viewport = fixture.nativeElement.querySelector('cdk-virtual-scroll-viewport');
         expect(viewport).toBeTruthy();
 
-        // 12 pokémon agrupados en filas de 3 equivalen a 4 filas
+        // 12 pokémon agrupados según el número de columnas (3 en desktop = 4 filas)
         const rows = component['pokemonRows']();
-        expect(rows.length).toBe(4);
-        expect(rows[0].length).toBe(3);
+        const cols = component.columns();
+        expect(rows.length).toBe(Math.ceil(12 / cols));
         expect(rows[0][0].name).toBe('pokemon-1');
     });
 

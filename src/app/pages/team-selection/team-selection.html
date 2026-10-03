@@ -65,7 +65,7 @@
             } @else {
                 <!-- Virtual Scroll Viewport de 3 columnas -->
                 <cdk-virtual-scroll-viewport
-                    [itemSize]="itemRowSize"
+                    [itemSize]="itemRowSize()"
                     (scrolledIndexChange)="onScrolledIndexChange($event)"
                     class="pokemon-virtual-viewport"
                     data-testid="pokemon-grid"
@@ -83,7 +83,6 @@
                     </div>
                 </cdk-virtual-scroll-viewport>
 
-                <!-- Botón Guardar centrado -->
                 <div class="save-action-container">
                     <button
                         type="button"

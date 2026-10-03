@@ -1,6 +1,9 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { map } from 'rxjs';
 import { PokemonCard } from '../../components/pokemon-card/pokemon-card';
 import { TrainerCard, TrainerDocumentInfo } from '../../components/trainer-card/trainer-card';
 import { LoadingService } from '../../services/loading/loading';
@@ -22,12 +25,19 @@ export class TeamSelection {
     protected readonly pokemonData = inject(PokemonData);
     private readonly loading = inject(LoadingService);
     private readonly router = inject(Router);
+    private readonly breakpointObserver = inject(BreakpointObserver);
 
-    /** Número de columnas para la cuadrícula */
-    readonly columns = 3;
+    /** Reactive column count: 2 on mobile (≤640px), 3 otherwise */
+    readonly columns = toSignal(
+        this.breakpointObserver
+            .observe('(max-width: 640px)')
+            .pipe(map((state) => (state.matches ? 2 : 3))),
+        { initialValue: 3 },
+    );
 
-    /** Altura estimada de cada fila en el Virtual Scroll */
-    readonly itemRowSize = 195;
+    /** Dynamic estimated row height for the Virtual Scroll (152px mobile, 195px desktop) */
+    readonly itemRowSize = computed(() => (this.columns() === 2 ? 152 : 195));
+
 
     /** Perfil del entrenador obtenido del estado reactivo */
     protected readonly profile = this.trainerData.profile;
@@ -66,12 +76,13 @@ export class TeamSelection {
         });
     });
 
-    /** Rows of 3 grouped Pokémon for the virtual scroll. */
+    /** Rows grouped by current column count for the virtual scroll. */
     protected readonly pokemonRows = computed<PokemonListItem[][]>(() => {
         const list = this.filteredPokemon();
+        const cols = this.columns();
         const rows: PokemonListItem[][] = [];
-        for (let i = 0; i < list.length; i += this.columns) {
-            rows.push(list.slice(i, i + this.columns));
+        for (let i = 0; i < list.length; i += cols) {
+            rows.push(list.slice(i, i + cols));
         }
         return rows;
     });
@@ -110,10 +121,11 @@ export class TeamSelection {
         }
     }
 
-    /** Pokemon Details */
+    /** Load details for items visible in the viewport */
     protected onScrolledIndexChange(rowIndex: number): void {
-        const startIndex = Math.max(0, (rowIndex - 1) * this.columns);
-        const endIndex = (rowIndex + 4) * this.columns;
+        const cols = this.columns();
+        const startIndex = Math.max(0, (rowIndex - 1) * cols);
+        const endIndex = (rowIndex + 4) * cols;
         const visibleItems = this.filteredPokemon().slice(startIndex, endIndex);
 
         if (visibleItems.length > 0) {

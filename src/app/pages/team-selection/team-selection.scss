@@ -259,7 +259,8 @@
     }
 
     .left-col {
-        max-width: 340px;
+        max-width: 440px;
+        width: 100%;
     }
 
     .right-col {
@@ -267,10 +268,63 @@
     }
 
     .pokemon-row {
-        grid-template-columns: repeat(2, 1fr);
         gap: 0.85rem;
         padding-bottom: 0.85rem;
     }
 }
 
+/* Móvil pequeño: card compacta + catálogo ajustado */
+@media (max-width: 640px) {
+    .team-selection-page {
+        padding: 1rem 0.875rem 2.5rem;
+    }
 
+    .page-top-header {
+        margin-bottom: 1.25rem;
+
+        .header-titles .main-title {
+            font-size: 1.35rem;
+        }
+
+        .header-titles .main-subtitle {
+            font-size: 0.85rem;
+        }
+    }
+
+    .left-col {
+        max-width: 100%;
+    }
+
+    .selection-header {
+        margin-bottom: 0.85rem;
+
+        .selection-title {
+            font-size: 1.35rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .selection-subtitle {
+            font-size: 0.85rem;
+        }
+    }
+
+    .search-bar {
+        margin-bottom: 0.85rem;
+    }
+
+    /* Virtual scroll ajustado en móvil: deja espacio al botón guardar */
+    .pokemon-virtual-viewport {
+        height: 380px;
+        padding-right: 0.2rem;
+    }
+
+    .pokemon-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.65rem;
+        padding-bottom: 0.65rem;
+    }
+
+    .save-action-container {
+        margin-top: 1rem;
+    }
+}
