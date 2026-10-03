@@ -1,0 +1,15 @@
+.git
+.github
+.angular
+.vscode
+.editorconfig
+dist
+node_modules
+pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+coverage
+karma.conf.js
+.prettierrc*
+*.md
