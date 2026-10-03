@@ -67,7 +67,11 @@ export class NewUser {
 
     /** back button */
     protected onBack(): void {
-        if (this.trainerData.hasProfile()) this.router.navigate(['/team']);
+        if (this.trainerData.hasCompleteTeam()) {
+            this.router.navigate(['/profile']);
+        } else if (this.trainerData.hasProfile()) {
+            this.router.navigate(['/team']);
+        }
     }
 
     /** save the account in trainer data */
@@ -89,7 +93,11 @@ export class NewUser {
         // simulacion de carga
         await new Promise((resolve) => setTimeout(resolve, 600));
 
-        await this.router.navigate(['/team']);
+        if (this.trainerData.hasCompleteTeam()) {
+            await this.router.navigate(['/profile']);
+        } else {
+            await this.router.navigate(['/team']);
+        }
         this.loading.hide();
     }
 }

@@ -8,6 +8,7 @@ describe('NewUser Page', () => {
     let component: NewUser;
 
     beforeEach(async () => {
+        localStorage.clear();
         await TestBed.configureTestingModule({
             imports: [NewUser],
             providers: [provideZonelessChangeDetection(), provideRouter([])],
