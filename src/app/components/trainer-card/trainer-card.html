@@ -46,37 +46,39 @@
 
     <!-- VARIANTE SUMMARY (Paso 2: Selección de Pokémon) -->
     @if (variant() === 'summary') {
-        <h2 class="trainer-name">{{ fullName() }}</h2>
+        <div class="summary-layout">
+            <h2 class="trainer-name">{{ fullName() }}</h2>
 
-        <div class="avatar-container">
-            <div class="avatar-circle">
-                @if (hasPhoto()) {
-                    <img [src]="photoData()" alt="Foto del entrenador" class="avatar-photo" />
-                } @else {
-                    <div class="avatar-placeholder">
-                        <img src="images/avatar.svg" alt="Avatar placeholder" class="placeholder-icon" />
+            <div class="avatar-container">
+                <div class="avatar-circle">
+                    @if (hasPhoto()) {
+                        <img [src]="photoData()" alt="Foto del entrenador" class="avatar-photo" />
+                    } @else {
+                        <div class="avatar-placeholder">
+                            <img src="images/avatar.svg" alt="Avatar placeholder" class="placeholder-icon" />
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="info-list">
+                <div class="info-row">
+                    <span class="info-label">Pasatiempo:</span>
+                    <span class="info-value">{{ hobby() || '—' }}</span>
+                </div>
+                @if (age() !== null) {
+                    <div class="info-row">
+                        <span class="info-label">Edad:</span>
+                        <span class="info-value">{{ age() }} años</span>
+                    </div>
+                }
+                @if (showDocument()) {
+                    <div class="info-row">
+                        <span class="info-label">{{ document()?.label }}:</span>
+                        <span class="info-value">{{ document()?.value }}</span>
                     </div>
                 }
             </div>
-        </div>
-
-        <div class="info-list">
-            <div class="info-row">
-                <span class="info-label">Pasatiempo:</span>
-                <span class="info-value">{{ hobby() || '—' }}</span>
-            </div>
-            @if (age() !== null) {
-                <div class="info-row">
-                    <span class="info-label">Edad:</span>
-                    <span class="info-value">{{ age() }} años</span>
-                </div>
-            }
-            @if (showDocument()) {
-                <div class="info-row">
-                    <span class="info-label">{{ document()?.label }}:</span>
-                    <span class="info-value">{{ document()?.value }}</span>
-                </div>
-            }
         </div>
     }
 

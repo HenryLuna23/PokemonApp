@@ -237,4 +237,135 @@
         color: #0f172a;
         text-align: right;
     }
+    .summary-layout {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+    }
+}
+
+/* ==========================================
+   Modo compacto en móvil (≤ 640px)
+   ========================================== */
+@media (max-width: 640px) {
+    /* Variante UPLOAD: reduce altura, avatar más pequeño */
+    .trainer-card.variant-upload {
+        min-height: auto;
+        padding: 1.5rem 1.25rem 1.5rem;
+        max-width: 100%;
+
+        .avatar-circle {
+            width: 140px;
+            height: 140px;
+        }
+
+        .upload-box {
+            margin-top: 1.25rem;
+        }
+    }
+
+    /* Variante SUMMARY: layout horizontal limpio con grid */
+    .trainer-card.variant-summary {
+        min-height: auto;
+        padding: 1.15rem 1.25rem;
+        max-width: 100%;
+        border-radius: 20px;
+
+        .summary-layout {
+            display: grid;
+            grid-template-columns: 86px 1fr;
+            grid-template-areas:
+                "avatar name"
+                "avatar info";
+            column-gap: 1.15rem;
+            row-gap: 0.25rem;
+            align-items: center;
+            width: 100%;
+
+            .avatar-container {
+                grid-area: avatar;
+                margin-bottom: 0;
+            }
+
+            .avatar-circle {
+                width: 86px;
+                height: 86px;
+                border-width: 4px;
+            }
+
+            .trainer-name {
+                grid-area: name;
+                font-size: 1.2rem;
+                font-weight: 800;
+                color: #004068;
+                margin: 0;
+                text-align: left;
+                line-height: 1.2;
+            }
+
+            .info-list {
+                grid-area: info;
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+                padding-top: 0.15rem;
+            }
+
+            .info-row {
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: baseline;
+                gap: 0.4rem;
+                padding-bottom: 0;
+                border-bottom: none;
+
+                .info-label {
+                    font-size: 0.8rem;
+                    color: rgba(0, 64, 104, 0.75);
+                    font-weight: 700;
+                }
+
+                .info-value {
+                    font-size: 0.85rem;
+                    font-weight: 500;
+                    color: #0f172a;
+                    text-align: left;
+                }
+            }
+        }
+    }
+
+    /* Variante PROFILE: compacta vertical */
+    .trainer-card.variant-profile {
+        min-height: auto;
+        padding: 1.25rem;
+        max-width: 100%;
+        border-radius: 20px;
+
+        .badge-header {
+            margin-bottom: 0.75rem;
+        }
+
+        .avatar-circle {
+            width: 110px;
+            height: 110px;
+            border-width: 5px;
+        }
+
+        .info-list {
+            padding-top: 0.75rem;
+            gap: 0.5rem;
+        }
+
+        .info-row {
+            padding-bottom: 0.35rem;
+
+            .info-label,
+            .info-value {
+                font-size: 0.9rem;
+            }
+        }
+    }
 }
