@@ -87,8 +87,8 @@
             <img src="images/badge.svg" alt="Medalla Entrenador" class="badge-icon" />
         </div>
 
-        <div class="avatar-container compact">
-            <div class="avatar-circle compact">
+        <div class="avatar-container">
+            <div class="avatar-circle">
                 @if (hasPhoto()) {
                     <img [src]="photoData()" alt="Foto del entrenador" class="avatar-photo" />
                 } @else {
@@ -101,18 +101,18 @@
 
         <div class="info-list">
             <div class="info-row">
-                <span class="info-label">Pasatiempo</span>
+                <span class="info-label">Pasatiempo:</span>
                 <span class="info-value">{{ hobby() || '—' }}</span>
             </div>
             @if (age() !== null) {
                 <div class="info-row">
-                    <span class="info-label">Edad</span>
+                    <span class="info-label">Edad:</span>
                     <span class="info-value">{{ age() }} años</span>
                 </div>
             }
             @if (showDocument()) {
                 <div class="info-row">
-                    <span class="info-label">{{ document()?.label }}</span>
+                    <span class="info-label">{{ document()?.label }}:</span>
                     <span class="info-value">{{ document()?.value }}</span>
                 </div>
             }
