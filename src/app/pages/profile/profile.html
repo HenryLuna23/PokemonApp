@@ -33,8 +33,30 @@
                 @for (pokemon of teamPokemon(); track pokemon.id) {
                 <article class="pokemon-card-detail" [attr.data-testid]="'pokemon-detail-' + pokemon.id">
                     <div class="pokemon-visual">
-                        <img [src]="getPokemonSprite(pokemon)" [alt]="pokemon.name" class="pokemon-sprite"
-                            loading="lazy" />
+                        <div class="pokemon-visual-actions" role="toolbar" aria-label="Acciones de Pokémon">
+                            <button type="button" class="action-btn sound-btn"
+                                [class.is-playing]="playingCryId() === pokemon.id" (click)="listenerCries(pokemon)"
+                                title="Escuchar sonido de {{ pokemon.name }}"
+                                aria-label="Escuchar sonido de {{ pokemon.name }}"
+                                [attr.data-testid]="'sound-btn-' + pokemon.id">
+                                <img src="images/sound.svg" alt="" aria-hidden="true" class="action-icon" />
+                            </button>
+
+                            <button type="button" class="action-btn shine-btn" [class.is-active]="isShiny(pokemon.id)"
+                                (click)="showShiny(pokemon)" title="Ver versión shiny"
+                                aria-label="Ver versión shiny de {{ pokemon.name }}"
+                                [attr.data-testid]="'shine-btn-' + pokemon.id">
+                                <img src="images/shine.svg" alt="" aria-hidden="true" class="action-icon" />
+                                @if (isShiny(pokemon.id)) {
+                                <span class="shiny-indicator-dot"></span>
+                                }
+                            </button>
+                        </div>
+
+                        <div class="sprite-wrapper" [class.is-shiny]="isShiny(pokemon.id)">
+                            <img [src]="getPokemonSprite(pokemon)" [alt]="pokemon.name" class="pokemon-sprite" loading="lazy" />
+                        </div>
+
                         <h3 class="pokemon-name">{{ pokemon.name }}</h3>
                         <span class="pokemon-types">{{ formatTypes(pokemon) }}</span>
                     </div>

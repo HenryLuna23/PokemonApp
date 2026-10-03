@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TrainerCard, TrainerDocumentInfo } from '../../components/trainer-card/trainer-card';
 import { PokemonData } from '../../services/pokemon-data/pokemon-data';
@@ -91,6 +91,19 @@ export class Profile {
     protected readonly trainerData = inject(TrainerData);
     protected readonly pokemonData = inject(PokemonData);
     private readonly router = inject(Router);
+    private readonly destroyRef = inject(DestroyRef);
+
+    /** IDs de Pokémon que tienen su versión shiny activa */
+    protected readonly shinyPokemonIds = signal<Set<number>>(new Set<number>());
+
+    /** Mapa de temporizadores activos para limpiar el estado shiny después de 5 segundos */
+    private readonly shinyTimers = new Map<number, ReturnType<typeof setTimeout>>();
+
+    /** Referencia al elemento de audio actual para evitar solapamientos */
+    private currentAudio: HTMLAudioElement | null = null;
+
+    /** ID del Pokémon cuyo sonido se está reproduciendo actualmente */
+    protected readonly playingCryId = signal<number | null>(null);
 
     /** Perfil del entrenador */
     protected readonly profile = this.trainerData.profile;
@@ -133,6 +146,16 @@ export class Profile {
         if (ids.length > 0) {
             this.pokemonData.loadDetails(ids);
         }
+
+        // Limpieza de temporizadores y audio al destruir el componente
+        this.destroyRef.onDestroy(() => {
+            this.shinyTimers.forEach((timer) => clearTimeout(timer));
+            this.shinyTimers.clear();
+            if (this.currentAudio) {
+                this.currentAudio.pause();
+                this.currentAudio = null;
+            }
+        });
     }
 
     /** Navigation to new-user */
@@ -145,11 +168,66 @@ export class Profile {
         this.router.navigate(['/team']);
     }
 
-    /** Get the official home sprite */
+    /**
+     * Verifica si un Pokémon tiene activa su versión shiny
+     */
+    protected isShiny(pokemonId: number): boolean {
+        return this.shinyPokemonIds().has(pokemonId);
+    }
+
+    /**
+     * Activa la versión shiny del Pokémon durante 5 segundos y luego la revierte automáticamente
+     */
+    protected showShiny(pokemon: Pokemon): void {
+        if (!pokemon?.id) return;
+        const id = pokemon.id;
+
+        // Cancelar temporizador previo si existía para este Pokémon
+        const existingTimer = this.shinyTimers.get(id);
+        if (existingTimer) {
+            clearTimeout(existingTimer);
+        }
+
+        // Activar estado shiny reactivamente
+        this.shinyPokemonIds.update((current) => {
+            const next = new Set(current);
+            next.add(id);
+            return next;
+        });
+
+        const timer = setTimeout(() => {
+            this.shinyPokemonIds.update((current) => {
+                const next = new Set(current);
+                next.delete(id);
+                return next;
+            });
+            this.shinyTimers.delete(id);
+        }, 3000);
+
+        this.shinyTimers.set(id, timer);
+    }
+
+    /**
+     * Obtiene el sprite correspondiente: versión shiny si está activa, o la normal por defecto
+     */
     protected getPokemonSprite(pokemon: Pokemon): string {
+        if (this.isShiny(pokemon.id)) {
+            return this.getPokemonSpriteShiny(pokemon);
+        }
         return (
             pokemon.sprites?.other?.home?.front_default ??
             `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon.id}.png`
+        );
+    }
+
+    /**
+     * URL del sprite shiny oficial (Home o Front Shiny como fallback)
+     */
+    protected getPokemonSpriteShiny(pokemon: Pokemon): string {
+        return (
+            pokemon.sprites?.other?.home?.front_shiny ??
+            pokemon.sprites?.front_shiny ??
+            `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/${pokemon.id}.png`
         );
     }
 
@@ -188,4 +266,43 @@ export class Profile {
             };
         });
     }
+
+    /**  reproduciendo el sonido del Pokémon */
+    protected listenerCries(pokemon: Pokemon): void {
+        const cryUrl = pokemon?.cries?.latest || pokemon?.cries?.legacy;
+        if (!cryUrl) {
+            console.warn('Este Pokémon no contiene sonido registrado.');
+            return;
+        }
+
+        // escuchamos solamente un audio a la vez
+        if (this.currentAudio) {
+            this.currentAudio.pause();
+            this.currentAudio.currentTime = 0;
+            this.currentAudio = null;
+        }
+
+        try {
+            const audio = new Audio(cryUrl);
+            audio.volume = 0.1;
+            this.currentAudio = audio;
+            this.playingCryId.set(pokemon.id);
+
+            audio.onended = () => {
+                if (this.playingCryId() === pokemon.id) this.playingCryId.set(null);
+                if (this.currentAudio === audio) this.currentAudio = null;
+            };
+
+            audio.onerror = () => {
+                if (this.playingCryId() === pokemon.id) this.playingCryId.set(null);
+            };
+
+            audio.play().catch((error) => {
+                if (this.playingCryId() === pokemon.id) this.playingCryId.set(null);
+            });
+        } catch (error) {
+            console.warn('Error al inicializar audio:', error);
+        }
+    }
 }
+

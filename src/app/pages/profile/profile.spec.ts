@@ -54,6 +54,10 @@ describe('Profile', () => {
                 },
             },
         },
+        cries: {
+            latest: 'https://pokemon-cries/1.ogg',
+            legacy: 'https://pokemon-cries/1-legacy.ogg',
+        },
         stats: [
             { base_stat: 45, effort: 0, stat: { name: 'hp', url: '' } },
             { base_stat: 49, effort: 0, stat: { name: 'attack', url: '' } },
@@ -155,5 +159,52 @@ describe('Profile', () => {
         const speedStat = stats.find((s) => s.label === 'Velocidad');
         expect(speedStat?.maxValue).toBe(180);
         expect(speedStat?.percentage).toBe(Math.round((45 / 180) * 100)); // 25%
+    });
+
+    it('should render sound and shine action buttons for each pokemon', () => {
+        const soundBtn = fixture.nativeElement.querySelector('[data-testid="sound-btn-1"]');
+        const shineBtn = fixture.nativeElement.querySelector('[data-testid="shine-btn-1"]');
+
+        expect(soundBtn).toBeTruthy();
+        expect(shineBtn).toBeTruthy();
+    });
+
+    it('should activate shiny version for 3 seconds and then revert automatically', () => {
+        jasmine.clock().install();
+
+        const shineBtn = fixture.nativeElement.querySelector('[data-testid="shine-btn-1"]') as HTMLButtonElement;
+        expect((component as any).isShiny(1)).toBeFalse();
+
+        shineBtn.click();
+        fixture.detectChanges();
+
+        expect((component as any).isShiny(1)).toBeTrue();
+
+        // Avanzar el reloj 2900ms (sigue siendo shiny)
+        jasmine.clock().tick(2900);
+        fixture.detectChanges();
+        expect((component as any).isShiny(1)).toBeTrue();
+
+        // Avanzar 200ms más (total > 3000ms)
+        jasmine.clock().tick(200);
+        fixture.detectChanges();
+        expect((component as any).isShiny(1)).toBeFalse();
+
+        jasmine.clock().uninstall();
+    });
+
+    it('should attempt to play audio cry when clicking sound button', () => {
+        const soundBtn = fixture.nativeElement.querySelector('[data-testid="sound-btn-1"]') as HTMLButtonElement;
+        expect(soundBtn).toBeTruthy();
+
+        // Spy on Audio constructor or play
+        const audioSpy = spyOn(window, 'Audio').and.returnValue({
+            volume: 0,
+            play: () => Promise.resolve(),
+            pause: () => {},
+        } as unknown as HTMLAudioElement);
+
+        soundBtn.click();
+        expect(audioSpy).toHaveBeenCalled();
     });
 });
