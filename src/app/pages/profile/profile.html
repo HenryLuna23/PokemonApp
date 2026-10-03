@@ -1,1 +1,65 @@
-<h1>Profile</h1>
+<main class="profile-page">
+    <div class="profile-layout">
+        <!-- COLUMNA IZQUIERDA: Saludo + Tarjeta Entrenador -->
+        <section class="trainer-column">
+            <header class="column-header">
+                <h1 class="greeting-title">¡Hola {{ firstName() }}!</h1>
+                <button type="button" class="btn-edit" (click)="onEditProfile()" aria-label="Editar perfil"
+                    data-testid="edit-profile-btn">
+                    <img src="images/edit.svg" alt="" class="edit-icon" aria-hidden="true" />
+                    <span>Editar perfil</span>
+                </button>
+            </header>
+
+            <div class="card-wrapper">
+                <app-trainer-card variant="profile" [photoData]="profile()?.photoData ?? null"
+                    [photoName]="profile()?.photoName ?? ''" [fullName]="profile()?.fullName ?? ''"
+                    [hobby]="profile()?.hobby ?? ''" [age]="trainerAge()" [document]="trainerDocument()" />
+            </div>
+        </section>
+
+        <!-- COLUMNA DERECHA: Mis Pokémon -->
+        <section class="pokemon-column">
+            <header class="column-header">
+                <h2 class="pokemon-title">Mis Pokémon</h2>
+                <button type="button" class="btn-edit" (click)="onEditTeam()" aria-label="Editar equipo Pokémon"
+                    data-testid="edit-team-btn">
+                    <img src="images/edit.svg" alt="" class="edit-icon" aria-hidden="true" />
+                    <span>Editar</span>
+                </button>
+            </header>
+
+            <div class="pokemon-cards-container">
+                @for (pokemon of teamPokemon(); track pokemon.id) {
+                <article class="pokemon-card-detail" [attr.data-testid]="'pokemon-detail-' + pokemon.id">
+                    <div class="pokemon-visual">
+                        <img [src]="getPokemonSprite(pokemon)" [alt]="pokemon.name" class="pokemon-sprite"
+                            loading="lazy" />
+                        <h3 class="pokemon-name">{{ pokemon.name }}</h3>
+                        <span class="pokemon-types">{{ formatTypes(pokemon) }}</span>
+                    </div>
+
+                    <div class="pokemon-stats">
+                        @for (stat of getStatsList(pokemon); track stat.label) {
+                        <div class="stat-row">
+                            <span class="stat-label">{{ stat.label }}</span>
+                            <div class="stat-bar-track">
+                                <div class="stat-bar-fill" [style.width.%]="stat.percentage"
+                                    [style.background-color]="getBarColor(pokemon)"></div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </article>
+                } @empty {
+                <div class="empty-team-state">
+                    <p class="empty-message">No tienes Pokémon seleccionados en tu equipo.</p>
+                    <button type="button" class="btn-select-team" (click)="onEditTeam()">
+                        Seleccionar Pokémon
+                    </button>
+                </div>
+                }
+            </div>
+        </section>
+    </div>
+</main>
