@@ -11,9 +11,151 @@
   padding: 0.75rem 2.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 
+  .header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   .header-logo {
     height: 3.25rem;
     width: auto;
     object-fit: contain;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .user-menu-wrapper {
+    position: relative;
+  }
+
+  .user-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.45rem 1.25rem;
+    border: 1.5px solid #004068;
+    border-radius: 9999px;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+
+    &:hover {
+      background-color: #f8fafc;
+    }
+
+    &:focus-visible {
+      outline: 2px solid #004068;
+      outline-offset: 2px;
+    }
+
+    .user-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #004068;
+    }
+
+    .chevron-icon {
+      width: 12px;
+      height: 12px;
+      object-fit: contain;
+      margin-top: 1px;
+      transition: transform 0.25s ease;
+
+      &.open {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  /* Dropdown Menu */
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background-color: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f1f5f9;
+    padding: 0.4rem;
+    min-width: 175px;
+    z-index: 1000;
+    animation: fadeInDropdown 0.15s ease-out;
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      border: none;
+      background: transparent;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+
+      .item-icon {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        object-fit: contain;
+      } 
+
+
+      &.logout-item {
+        color: #dc2626;
+
+        &:hover {
+          background-color: #fee2e2;
+        }
+
+        &:focus-visible {
+          outline: 2px solid #dc2626;
+          outline-offset: -2px;
+        }
+      }
+    }
+  }
+
+  .search-btn {
+    background: none;
+    border: none;
+    padding: 0.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #f1f5f9;
+    }
+
+    .search-icon {
+      width: 22px;
+      height: 22px;
+    }
+  }
+}
+
+@keyframes fadeInDropdown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

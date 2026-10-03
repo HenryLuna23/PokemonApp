@@ -1,5 +1,38 @@
 <header class="app-header">
   <div class="header-container">
     <img src="images/logo_pkmn.png" alt="Pokémon" class="header-logo" />
+
+    @if (firstName()) {
+    <div class="header-actions">
+      <div class="user-menu-wrapper">
+        <button type="button" class="user-badge" (click)="toggleDropdown($event)"
+          [attr.aria-expanded]="isDropdownOpen()" aria-haspopup="true" data-testid="user-badge-btn">
+          <span class="user-name">{{ firstName() }}</span>
+          <img class="chevron-icon" [class.open]="isDropdownOpen()" src="images/arrow_down.svg" alt=""
+            aria-hidden="true" />
+        </button>
+
+        @if (isDropdownOpen()) {
+        <div class="dropdown-menu" role="menu" data-testid="user-dropdown-menu">
+          <button type="button" class="dropdown-item logout-item" (click)="promptLogout()" role="menuitem"
+            data-testid="logout-menu-item">
+            <img class="item-icon" src="images/logout.svg" alt="" srcset="">
+            <span>Cerrar sesión</span>
+          </button>
+        </div>
+        }
+      </div>
+
+      <button type="button" class="search-btn" aria-label="Buscar Pokémon">
+        <img src="images/search.svg" alt="" class="search-icon" aria-hidden="true" />
+      </button>
+    </div>
+    }
   </div>
 </header>
+
+<app-confirm-modal [isOpen]="showConfirmModal()" title="¿Cerrar sesión?"
+  message="¿Estás seguro de que deseas cerrar sesión? Se eliminarán tus datos de perfil y tu equipo de Pokémon seleccionados."
+  confirmText="Sí, cerrar sesión" cancelText="Cancelar" variant="danger" testId="logout-modal"
+  confirmTestId="confirm-logout-btn" cancelTestId="cancel-logout-btn" (confirmed)="confirmLogout()"
+  (cancelled)="cancelLogout()" />
