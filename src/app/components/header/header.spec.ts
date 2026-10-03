@@ -1,6 +1,7 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { NavigationEnd, Event as RouterEvent, Router } from '@angular/router';
+import { Observable, Subject } from 'rxjs';
 import { LoadingService } from '../../services/loading/loading';
 import { TrainerData } from '../../services/trainer-data/trainer-data';
 import { Header } from './header';
@@ -10,10 +11,15 @@ describe('Header', () => {
   let component: Header;
   let trainerData: TrainerData;
   let router: jasmine.SpyObj<Router>;
+  let routerEventsSubject: Subject<RouterEvent>;
 
   beforeEach(async () => {
     localStorage.clear();
-    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
+    routerEventsSubject = new Subject<RouterEvent>();
+    router = jasmine.createSpyObj<Router>('Router', ['navigate'], {
+      url: '/profile',
+      events: routerEventsSubject.asObservable() as Observable<RouterEvent>,
+    });
 
     await TestBed.configureTestingModule({
       imports: [Header],
@@ -39,7 +45,7 @@ describe('Header', () => {
     expect(logo.alt).toBe('Pokémon');
   });
 
-  it('should render user badge when profile exists', () => {
+  it('should render user badge when profile exists and on profile route', () => {
     trainerData.saveAccount({
       fullName: 'Henry Cavill',
       birthdate: new Date('1990-05-15'),
@@ -55,6 +61,23 @@ describe('Header', () => {
 
     const searchBtn = fixture.nativeElement.querySelector('.search-btn');
     expect(searchBtn).toBeTruthy();
+  });
+
+  it('should not render user badge when not on profile route even if profile exists', () => {
+    trainerData.saveAccount({
+      fullName: 'Henry Cavill',
+      birthdate: new Date('1990-05-15'),
+      dni: '05634225-1',
+      isAdult: true,
+      photoData: 'data:image/png;base64,mock',
+      photoName: 'henry.png',
+    });
+    // Simular navegación a otra ruta como /new-user
+    routerEventsSubject.next(new NavigationEnd(1, '/new-user', '/new-user'));
+    fixture.detectChanges();
+
+    const userName = fixture.nativeElement.querySelector('.user-name');
+    expect(userName).toBeNull();
   });
 
   it('should toggle dropdown menu when clicking user badge', () => {

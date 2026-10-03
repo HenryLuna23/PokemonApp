@@ -2,7 +2,7 @@
   <div class="header-container">
     <img src="images/logo_pkmn.png" alt="Pokémon" class="header-logo" />
 
-    @if (firstName()) {
+    @if (isProfileRoute() && firstName()) {
     <div class="header-actions">
       <div class="user-menu-wrapper">
         <button type="button" class="user-badge" (click)="toggleDropdown($event)"

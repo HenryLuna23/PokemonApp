@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, computed, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { filter, map } from 'rxjs';
 import { LoadingService } from '../../services/loading/loading';
 import { TrainerData } from '../../services/trainer-data/trainer-data';
 
@@ -18,6 +20,21 @@ export class Header {
   private readonly loading = inject(LoadingService);
   private readonly router = inject(Router);
   private readonly elementRef = inject(ElementRef);
+
+  /** Reactive current URL via router events */
+  private readonly currentUrl = toSignal(
+    this.router.events.pipe(
+      filter((e) => e instanceof NavigationEnd),
+      map((e) => (e as NavigationEnd).urlAfterRedirects),
+    ),
+    { initialValue: this.router.url },
+  );
+
+  /** Only show user actions when the user is on the profile page */
+  protected readonly isProfileRoute = computed(() => {
+    const url = this.currentUrl() ?? '';
+    return url === '/profile' || url.startsWith('/profile?') || url.startsWith('/profile/');
+  });
 
   /** Estado del dropdown de usuario */
   readonly isDropdownOpen = signal<boolean>(false);
