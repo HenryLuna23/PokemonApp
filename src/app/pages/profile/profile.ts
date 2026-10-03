@@ -1,10 +1,18 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { map } from 'rxjs';
+import { register } from 'swiper/element/bundle';
 import { TrainerCard, TrainerDocumentInfo } from '../../components/trainer-card/trainer-card';
 import { PokemonData } from '../../services/pokemon-data/pokemon-data';
 import { TrainerData } from '../../services/trainer-data/trainer-data';
 import { Pokemon, Stat } from '../../types/pokemon/pokemon';
 import { calculateAge } from '../../utils/age/age';
+
+// Register Swiper Web Components (<swiper-container>, <swiper-slide>)
+register();
 
 export const TYPE_SPANISH: Record<string, string> = {
     normal: 'Normal',
@@ -82,7 +90,8 @@ export interface PokemonStatView {
 @Component({
     selector: 'app-profile',
     standalone: true,
-    imports: [TrainerCard],
+    imports: [TrainerCard, NgTemplateOutlet],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './profile.html',
     styleUrl: './profile.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -92,6 +101,15 @@ export class Profile {
     protected readonly pokemonData = inject(PokemonData);
     private readonly router = inject(Router);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly breakpointObserver = inject(BreakpointObserver);
+
+    /** Detect if viewport is mobile/tablet (≤ 960px) to render Swiper carousel */
+    readonly isMobile = toSignal(
+        this.breakpointObserver
+            .observe('(max-width: 960px)')
+            .pipe(map((state) => state.matches)),
+        { initialValue: false },
+    );
 
     /** IDs de Pokémon que tienen su versión shiny activa */
     protected readonly shinyPokemonIds = signal<Set<number>>(new Set<number>());

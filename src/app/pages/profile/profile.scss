@@ -102,7 +102,37 @@
 .pokemon-cards-container {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    width: 100%;
+
+    .pokemon-cards-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        width: 100%;
+    }
+}
+
+.pokemon-swiper {
+    width: 100%;
+    padding-bottom: 2.75rem;
+    --swiper-theme-color: #004068;
+    --swiper-navigation-size: 20px;
+    --swiper-navigation-color: #004068;
+    --swiper-pagination-bullet-inactive-color: #94a3b8;
+    --swiper-pagination-bullet-inactive-opacity: 0.5;
+    --swiper-pagination-color: #004068;
+    --swiper-pagination-bottom: 4px;
+
+    swiper-slide {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .pokemon-card-detail {
+        width: 100%;
+    }
 }
 
 /* Tarjeta individual de Pokémon en el perfil */

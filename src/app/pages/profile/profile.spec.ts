@@ -161,6 +161,14 @@ describe('Profile', () => {
         expect(speedStat?.percentage).toBe(Math.round((45 / 180) * 100)); // 25%
     });
 
+    it('should render pokemon cards using responsive view (swiper or list)', () => {
+        const container = fixture.nativeElement.querySelector('.pokemon-cards-container');
+        expect(container).toBeTruthy();
+
+        const detailCard = fixture.nativeElement.querySelector('[data-testid="pokemon-detail-1"]');
+        expect(detailCard).toBeTruthy();
+    });
+
     it('should render sound and shine action buttons for each pokemon', () => {
         const soundBtn = fixture.nativeElement.querySelector('[data-testid="sound-btn-1"]');
         const shineBtn = fixture.nativeElement.querySelector('[data-testid="shine-btn-1"]');
