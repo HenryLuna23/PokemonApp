@@ -1,0 +1,35 @@
+@if (isOpen()) {
+<div class="modal-backdrop" (click)="onBackdropClick()" role="dialog" aria-modal="true" aria-labelledby="modal-title"
+  [attr.data-testid]="testId()">
+  <div class="confirm-modal" [class]="'variant-' + variant()" (click)="$event.stopPropagation()">
+    <div class="modal-icon-container">
+      @switch (variant()) {
+      @case ('danger') {
+      <img src="images/error.svg" alt="Advertencia" class="modal-icon-img" />
+      }
+      @case ('warning') {
+      <img src="images/warning.svg" alt="Aviso" class="modal-icon-img" />
+      }
+      @case ('info') {
+      <img src="images/info.svg" alt="Informacion" class="modal-icon-img" />
+      }
+      }
+    </div>
+
+    <h3 id="modal-title" class="modal-title">{{ title() }}</h3>
+
+    @if (message()) {
+    <p class="modal-message">{{ message() }}</p>
+    }
+
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" (click)="onCancelClick()" [attr.data-testid]="cancelTestId()">
+        {{ cancelText() }}
+      </button>
+      <button type="button" class="btn-confirm" (click)="onConfirmClick()" [attr.data-testid]="confirmTestId()">
+        {{ confirmText() }}
+      </button>
+    </div>
+  </div>
+</div>
+}
