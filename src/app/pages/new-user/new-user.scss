@@ -65,7 +65,7 @@
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        gap: 4.5rem;
+        gap: 6rem;
     }
 
     .card-col {
@@ -82,7 +82,7 @@
 }
 
 /* Responsivo para tablets y móviles */
-@media (max-width: 840px) {
+@media (max-width: 960px) {
     .new-user-page {
         padding: 1.5rem 1rem 3rem;
 
@@ -101,12 +101,32 @@
         .page-content {
             flex-direction: column;
             align-items: center;
+            gap: 3.5rem;
+        }
+
+        .card-col,
+        .form-col {
+            max-width: 440px;
+        }
+    }
+}
+
+/* Móvil pequeño: card al mínimo posible con separación limpia */
+@media (max-width: 640px) {
+    .new-user-page {
+        padding: 1.25rem 0.875rem 2.5rem;
+
+        .page-title {
+            font-size: 1.3rem;
+        }
+
+        .page-content {
             gap: 2.5rem;
         }
 
         .card-col,
         .form-col {
-            max-width: 360px;
+            max-width: 100%;
         }
     }
 }
